@@ -38,10 +38,21 @@ final dictionaryProvider = Provider(
   (_) => DictionaryService(),
 );
 
+final errorProvider = Provider(
+  (_) => ErrorService(),
+);
+
 final getQueryResponse =
     FutureProvider.autoDispose.family<List<DictionaryModel>, String>(
   (ref, query) {
     final res = ref.read(dictionaryProvider);
+    return res.get(query);
+  },
+);
+
+final getErrorResponse = FutureProvider.autoDispose.family<bool, String>(
+  (ref, query) {
+    final res = ref.read(errorProvider);
     return res.get(query);
   },
 );

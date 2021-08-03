@@ -8,17 +8,37 @@ Column wordWithIcons(AsyncData<List<DictionaryModel>> res, int index,
     BuildContext context, AssetsAudioPlayer assetAudioPlayer) {
   return Column(
     children: [
-      Container(
-        child: Center(
-          child: Text(
-            '${res.value[index].word}',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            child: Center(
+              child: Text(
+                '${res.value[index].word}',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
-        ),
+          SizedBox(
+            width: 10,
+          ),
+          Container(
+            child: Center(
+              child: Text(
+                '${res.value[index].phonetics.first.text}',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       SizedBox(
         height: 25,
@@ -36,6 +56,7 @@ Column wordWithIcons(AsyncData<List<DictionaryModel>> res, int index,
               children: [
                 Container(
                   child: IconButton(
+                    tooltip: "Copy to Clipboard",
                     onPressed: () {
                       Clipboard.setData(
                         ClipboardData(text: res.value[index].word),
@@ -74,6 +95,7 @@ Column wordWithIcons(AsyncData<List<DictionaryModel>> res, int index,
               children: [
                 Container(
                   child: IconButton(
+                    tooltip: "Play pronounciation",
                     onPressed: () {
                       assetAudioPlayer.open(
                         Audio.network(res.value[index].phonetics.first.audio),
@@ -104,6 +126,7 @@ Column wordWithIcons(AsyncData<List<DictionaryModel>> res, int index,
               children: [
                 Container(
                   child: IconButton(
+                    tooltip: "Save to bookmark",
                     onPressed: () {},
                     icon: Icon(
                       Icons.bookmark_added_rounded,
@@ -130,6 +153,7 @@ Column wordWithIcons(AsyncData<List<DictionaryModel>> res, int index,
               children: [
                 Container(
                   child: IconButton(
+                    tooltip: "Share this word",
                     onPressed: () {},
                     icon: Icon(
                       Icons.share_rounded,

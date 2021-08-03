@@ -9,13 +9,38 @@ class DictionaryService {
 
     try {
       response = await http.get(url);
+      print(response.statusCode);
+
       if (response.statusCode == 200) {
-        print(response.body);
         var res = dictionaryModelFromJson(response.body);
         return res;
       } else
         return null;
     } on Exception catch (e) {
+      print("object");
+      print(e.toString());
+      throw e;
+    }
+  }
+}
+
+class ErrorService {
+  static final baseURL = "https://api.dictionaryapi.dev/api/v2/entries/en_US/";
+
+  Future<bool> get(query) async {
+    http.Response response;
+    final url = Uri.parse("$baseURL$query");
+
+    try {
+      response = await http.get(url);
+      print(response.statusCode);
+
+      if (response.statusCode == 200) {
+        return true;
+      } else if (response.statusCode == 404) return false;
+    } on Exception catch (e) {
+      print("object");
+      print(e.toString());
       throw e;
     }
   }
