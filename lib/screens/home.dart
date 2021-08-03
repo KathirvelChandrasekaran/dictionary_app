@@ -96,30 +96,41 @@ class Home extends StatelessWidget {
                 return ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Material(
-                    color: Colors.white,
-                    elevation: 4.0,
-                    child: Column(
-                      children: autoResponse.data.value.isNotEmpty
-                          ? autoResponse.data.value
-                              .map((data) => ListTile(
-                                    title: Text(
-                                      data.word,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    onTap: () {
-                                      queryListener.query = data.word;
-                                      controller.close();
-                                      queryListener.listenFlag = true;
-                                    },
-                                  ))
-                              .toList()
-                          : ListTile(
-                              title: Text("Please provide word to search!"),
+                      color: Colors.white,
+                      elevation: 4.0,
+                      child: Container(
+                        height: MediaQuery.of(context).size.height,
+                        child: autoResponse.map(
+                          data: (data) => ListView.builder(
+                            itemCount: autoResponse.data.value.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text(
+                                  data.value[index].word,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                onTap: () {
+                                  queryListener.query = data.value[index].word;
+                                  controller.close();
+                                  queryListener.listenFlag = true;
+                                },
+                              );
+                            },
+                          ),
+                          loading: (_) => Container(
+                            width: 50,
+                            child: LinearProgressIndicator(),
+                          ),
+                          error: (_) => Text(
+                            _.error.toString(),
+                            style: TextStyle(
+                              color: Colors.red,
                             ),
-                    ),
-                  ),
+                          ),
+                        ),
+                      )),
                 );
               },
               body: Container(

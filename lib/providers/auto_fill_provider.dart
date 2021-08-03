@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dictionary_app/models/auto_fill_model.dart';
 
 class AutoFillNotifier extends ChangeNotifier {
-  String _query = "";
+  String _query = "a";
 
   set query(value) {
     _query = value;
