@@ -1,6 +1,7 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:dictionary_app/models/dictionay_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Column wordWithIcons(AsyncData<List<DictionaryModel>> res, int index,
@@ -35,7 +36,19 @@ Column wordWithIcons(AsyncData<List<DictionaryModel>> res, int index,
               children: [
                 Container(
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Clipboard.setData(
+                        ClipboardData(text: res.value[index].word),
+                      ).then(
+                        (value) => ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Text is copied to Clipboard ✌🏼"),
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      );
+                    },
                     icon: Icon(
                       Icons.copy_rounded,
                       color: Theme.of(context).indicatorColor,
