@@ -3,6 +3,7 @@ import 'package:dictionary_app/models/dictionay_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:share/share.dart';
 
 Column wordWithIcons(AsyncData<List<DictionaryModel>> res, int index,
     BuildContext context, AssetsAudioPlayer assetAudioPlayer) {
@@ -135,7 +136,7 @@ Column wordWithIcons(AsyncData<List<DictionaryModel>> res, int index,
                   ),
                 ),
                 Text(
-                  "Save",
+                  "Bookmark",
                   style: TextStyle(
                     color: Theme.of(context).indicatorColor,
                   ),
@@ -154,7 +155,12 @@ Column wordWithIcons(AsyncData<List<DictionaryModel>> res, int index,
                 Container(
                   child: IconButton(
                     tooltip: "Share this word",
-                    onPressed: () {},
+                    onPressed: () {
+                      Share.share(
+                        'Check out the word ${res.value.first.word} in Dictionary app!',
+                        subject: 'Look what I made!',
+                      );
+                    },
                     icon: Icon(
                       Icons.share_rounded,
                       color: Theme.of(context).indicatorColor,
