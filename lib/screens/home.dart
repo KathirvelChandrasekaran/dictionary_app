@@ -1,3 +1,4 @@
+import 'package:dictionary_app/providers/auto_fill_provider.dart';
 import 'package:dictionary_app/providers/dictionary_provider.dart';
 import 'package:dictionary_app/widgets/word_with_icons.dart';
 import 'package:flutter/material.dart';
@@ -31,8 +32,10 @@ class Home extends StatelessWidget {
     return Consumer(
       builder: (context, watch, child) {
         var queryListener = watch(queryProvider);
+        var autoFillListener = watch(autoFillQueryProvider);
         var response = watch(getQueryResponse(queryListener.query));
-
+        var autoResponse = watch(getAutoFillResponse(autoFillListener.query));
+        FloatingSearchBarController controller = FloatingSearchBarController();
         return Scaffold(
           backgroundColor: Theme.of(context).primaryColor,
           appBar: AppBar(
@@ -45,6 +48,7 @@ class Home extends StatelessWidget {
           body: Container(
             margin: EdgeInsets.only(top: 10),
             child: FloatingSearchBar(
+              controller: controller,
               hint: 'Search word',
               scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
               transitionDuration: const Duration(milliseconds: 100),
@@ -54,7 +58,10 @@ class Home extends StatelessWidget {
               openAxisAlignment: 0.0,
               width: isPortrait ? 600 : 500,
               debounceDelay: const Duration(milliseconds: 100),
-              onQueryChanged: (val) {},
+              onQueryChanged: (val) {
+                autoFillListener.query = val;
+                watch(getAutoFillResponse(autoFillListener.query));
+              },
               clearQueryOnClose: false,
               transition: CircularFloatingSearchBarTransition(),
               onSubmitted: (val) {
@@ -75,10 +82,11 @@ class Home extends StatelessWidget {
                 FloatingSearchBarAction(
                   showIfOpened: false,
                   child: CircularButton(
-                      icon: const Icon(
-                        Icons.search_rounded,
-                      ),
-                      onPressed: () {}),
+                    icon: const Icon(
+                      Icons.search_rounded,
+                    ),
+                    onPressed: () {},
+                  ),
                 ),
                 FloatingSearchBarAction.searchToClear(
                   showIfClosed: false,
@@ -90,7 +98,27 @@ class Home extends StatelessWidget {
                   child: Material(
                     color: Colors.white,
                     elevation: 4.0,
-                    child: Column(),
+                    child: Column(
+                      children: autoResponse.data.value.isNotEmpty
+                          ? autoResponse.data.value
+                              .map((data) => ListTile(
+                                    title: Text(
+                                      data.word,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      queryListener.query = data.word;
+                                      controller.close();
+                                      queryListener.listenFlag = true;
+                                    },
+                                  ))
+                              .toList()
+                          : ListTile(
+                              title: Text("Please provide word to search!"),
+                            ),
+                    ),
                   ),
                 );
               },
