@@ -1,5 +1,7 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:dictionary_app/models/dictionay_model.dart';
+import 'package:dictionary_app/providers/book_mark_provider.dart';
+import 'package:dictionary_app/utils/supabase_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +9,7 @@ import 'package:share/share.dart';
 
 Column wordWithIcons(AsyncData<List<DictionaryModel>> res, int index,
     BuildContext context, AssetsAudioPlayer assetAudioPlayer) {
+  SupabaseManager manager = SupabaseManager();
   return Column(
     children: [
       Row(
@@ -117,33 +120,47 @@ Column wordWithIcons(AsyncData<List<DictionaryModel>> res, int index,
               ],
             ),
           ),
-          Container(
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              children: [
-                Container(
-                  child: IconButton(
-                    tooltip: "Save to bookmark",
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.bookmark_added_rounded,
-                      color: Theme.of(context).indicatorColor,
+          Consumer(builder: (context, watch, child) {
+            final bookMarksProvider = watch(bookMarkProvider);
+            return Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    child: IconButton(
+                      tooltip: "Save to bookmark",
+                      onPressed: () async {
+                        print("object");
+                        await bookMarksProvider.addBookMark(
+                            manager.client.auth.currentUser.email,
+                            res.value[index].word,
+                            res.value[index].meanings.first.definitions.first
+                                .definition,
+                            res.value[index].phonetics.first.audio,
+                            res.value[index].phonetics.first.text,
+                            res.value[index].meanings.first.partOfSpeech,
+                            DateTime.now());
+                      },
+                      icon: Icon(
+                        Icons.bookmark_added_rounded,
+                        color: Theme.of(context).indicatorColor,
+                      ),
                     ),
                   ),
-                ),
-                Text(
-                  "Bookmark",
-                  style: TextStyle(
-                    color: Theme.of(context).indicatorColor,
-                  ),
-                )
-              ],
-            ),
-          ),
+                  Text(
+                    "Bookmark",
+                    style: TextStyle(
+                      color: Theme.of(context).indicatorColor,
+                    ),
+                  )
+                ],
+              ),
+            );
+          }),
           Container(
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(

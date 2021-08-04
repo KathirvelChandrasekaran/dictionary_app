@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:dictionary_app/screens/sign_up.dart';
+import 'package:dictionary_app/screens/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
       () => Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => AuthScreen(),
+          builder: (context) => Wrapper(),
         ),
       ),
     );

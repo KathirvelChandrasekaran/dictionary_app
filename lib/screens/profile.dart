@@ -1,6 +1,7 @@
 import 'package:dictionary_app/screens/splash_screen.dart';
 import 'package:dictionary_app/utils/supabase_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key key}) : super(key: key);
@@ -24,6 +25,8 @@ class _ProfileState extends State<Profile> {
         actions: [
           IconButton(
             onPressed: () async {
+              final sharedPreference = await SharedPreferences.getInstance();
+              sharedPreference.clear();
               await manager.client.auth.signOut();
               Navigator.pushReplacement(
                 context,

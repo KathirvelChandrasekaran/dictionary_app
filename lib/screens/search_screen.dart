@@ -80,8 +80,8 @@ class SearchScreen extends StatelessWidget {
                   queryListener.listenFlag = true;
                   watch(getQueryResponse(queryListener.query));
                   watch(getErrorResponse(queryListener.query));
-                  createSnackBar(
-                      "${response.data.value.length} results for you");
+                  // createSnackBar(
+                  //     "${response.data.value.length} results for you");
                 }
               },
               actions: [

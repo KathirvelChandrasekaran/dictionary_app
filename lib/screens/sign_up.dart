@@ -1,7 +1,6 @@
 import 'package:dictionary_app/providers/auth_provider.dart';
 import 'package:dictionary_app/screens/home.dart';
 import 'package:dictionary_app/screens/sign_in.dart';
-import 'package:dictionary_app/utils/supabase_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
