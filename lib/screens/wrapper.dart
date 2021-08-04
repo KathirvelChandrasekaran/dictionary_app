@@ -1,6 +1,5 @@
 import 'package:dictionary_app/screens/home.dart';
 import 'package:dictionary_app/screens/sign_up.dart';
-import 'package:dictionary_app/screens/splash_screen.dart';
 import 'package:dictionary_app/utils/supabase_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

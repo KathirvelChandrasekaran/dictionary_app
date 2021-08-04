@@ -1,15 +1,16 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:dictionary_app/models/dictionay_model.dart';
-import 'package:dictionary_app/providers/book_mark_provider.dart';
+import 'package:dictionary_app/utils/snackBar.dart';
 import 'package:dictionary_app/utils/supabase_manager.dart';
+import 'package:dictionary_app/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share/share.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Column wordWithIcons(AsyncData<List<DictionaryModel>> res, int index,
     BuildContext context, AssetsAudioPlayer assetAudioPlayer) {
-  SupabaseManager manager = SupabaseManager();
   return Column(
     children: [
       Row(
@@ -121,7 +122,6 @@ Column wordWithIcons(AsyncData<List<DictionaryModel>> res, int index,
             ),
           ),
           Consumer(builder: (context, watch, child) {
-            final bookMarksProvider = watch(bookMarkProvider);
             return Container(
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
@@ -134,16 +134,36 @@ Column wordWithIcons(AsyncData<List<DictionaryModel>> res, int index,
                     child: IconButton(
                       tooltip: "Save to bookmark",
                       onPressed: () async {
-                        print("object");
-                        await bookMarksProvider.addBookMark(
-                            manager.client.auth.currentUser.email,
-                            res.value[index].word,
-                            res.value[index].meanings.first.definitions.first
-                                .definition,
-                            res.value[index].phonetics.first.audio,
-                            res.value[index].phonetics.first.text,
-                            res.value[index].meanings.first.partOfSpeech,
-                            DateTime.now());
+                        final sharedPreferences =
+                            await SharedPreferences.getInstance();
+                        final session = sharedPreferences.getString('user');
+                        final response = await SupabaseManager()
+                            .client
+                            .auth
+                            .recoverSession(session);
+                        await SupabaseManager()
+                            .client
+                            .from('bookmarks')
+                            .insert({
+                              'createdBy': response.user.email,
+                              'word': res.value[index].word,
+                              'meaning': res.value[index].meanings.first
+                                  .definitions.first.definition,
+                              'audioURL':
+                                  res.value[index].phonetics.first.audio,
+                              'phoenetics':
+                                  res.value[index].phonetics.first.text,
+                              'partsOfSpeech':
+                                  res.value[index].meanings.first.partOfSpeech,
+                            })
+                            .execute()
+                            .then(
+                              (value) => createSnackBar(
+                                  "Saved to your bookmark",
+                                  context,
+                                  theme.accentColor,
+                                  theme.primaryColor),
+                            );
                       },
                       icon: Icon(
                         Icons.bookmark_added_rounded,
