@@ -9,7 +9,7 @@ ThemeData theme = ThemeData(
   errorColor: Color(0xffce1212),
   unselectedWidgetColor: Colors.white,
   appBarTheme: AppBarTheme(
-    color: Color(0xff151515),
+    color: Color(0xFFCD0916),
     elevation: 0,
     iconTheme: IconThemeData(
       color: Color(
