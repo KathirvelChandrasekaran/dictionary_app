@@ -1,6 +1,8 @@
+import 'package:dictionary_app/providers/auth_provider.dart';
 import 'package:dictionary_app/screens/home.dart';
 import 'package:dictionary_app/screens/sign_up.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SignIn extends StatelessWidget {
   const SignIn({Key key}) : super(key: key);
@@ -11,189 +13,229 @@ class SignIn extends StatelessWidget {
     final _emailController = TextEditingController();
     final _passwordController = TextEditingController();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Sign in"),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Form(
-            key: _formKey,
+    void createSnackBar(String message) {
+      final snackBar = new SnackBar(
+        content: new Text(
+          message,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).primaryColor,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        backgroundColor: Theme.of(context).accentColor,
+        behavior: SnackBarBehavior.floating,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+
+    return Consumer(builder: (context, watch, child) {
+      final authProvider = watch(authServiceProvider);
+      return Scaffold(
+        appBar: AppBar(
+          title: Text("Sign in"),
+        ),
+        body: SingleChildScrollView(
+          child: Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
-                  child: TextFormField(
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      fillColor: Theme.of(context).accentColor,
-                      labelText: "Email",
-                      labelStyle: TextStyle(
-                        color: Theme.of(context).accentColor,
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.1,
                       ),
-                      prefixIcon: Icon(
-                        Icons.email_rounded,
-                        color: Theme.of(context).accentColor,
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Theme.of(context).accentColor),
-                      ),
-                      errorBorder: UnderlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Theme.of(context).accentColor),
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Theme.of(context).accentColor,
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+                        child: TextFormField(
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            fillColor: Theme.of(context).accentColor,
+                            labelText: "Email",
+                            labelStyle: TextStyle(
+                              color: Theme.of(context).accentColor,
+                            ),
+                            prefixIcon: Icon(
+                              Icons.email_rounded,
+                              color: Theme.of(context).accentColor,
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).accentColor),
+                            ),
+                            errorBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).accentColor),
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Theme.of(context).accentColor,
+                              ),
+                            ),
+                            errorStyle: TextStyle(
+                              color: Theme.of(context).accentColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
+                          ),
+                          cursorColor: Theme.of(context).primaryColor,
+                          controller: _emailController,
+                          style: TextStyle(
+                            color: Theme.of(context).accentColor,
+                          ),
+                          validator: (val) {
+                            if (val.isEmpty) return "Should not be empty";
+                            return null;
+                          },
+                          onChanged: (val) {},
                         ),
                       ),
-                      errorStyle: TextStyle(
-                        color: Theme.of(context).accentColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
+                      SizedBox(
+                        height: 25,
                       ),
-                    ),
-                    cursorColor: Theme.of(context).primaryColor,
-                    controller: _emailController,
-                    style: TextStyle(
-                      color: Theme.of(context).accentColor,
-                    ),
-                    validator: (val) {
-                      if (val.isEmpty) return "Should not be empty";
-                      return null;
-                    },
-                    onChanged: (val) {},
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+                        child: TextFormField(
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            fillColor: Theme.of(context).accentColor,
+                            labelText: "Password",
+                            labelStyle: TextStyle(
+                              color: Theme.of(context).accentColor,
+                            ),
+                            prefixIcon: Icon(
+                              Icons.password_rounded,
+                              color: Theme.of(context).accentColor,
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).accentColor),
+                            ),
+                            errorBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).accentColor),
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Theme.of(context).accentColor,
+                              ),
+                            ),
+                            errorStyle: TextStyle(
+                              color: Theme.of(context).accentColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
+                          ),
+                          obscureText: true,
+                          cursorColor: Theme.of(context).primaryColor,
+                          controller: _passwordController,
+                          style: TextStyle(
+                            color: Theme.of(context).accentColor,
+                          ),
+                          validator: (val) {
+                            if (val.isEmpty) return "Should not be empty";
+                            return null;
+                          },
+                          onChanged: (val) {},
+                        ),
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState.validate()) {
+                            var response = await authProvider.signIn(
+                                _emailController.text,
+                                _passwordController.text);
+                            if (response.error != null)
+                              createSnackBar(response.error.message);
+                            if (response.error == null)
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Home(),
+                                ),
+                              );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: Theme.of(context).accentColor,
+                          padding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 135),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                        child: Text(
+                          "Sign in",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 ),
                 SizedBox(
-                  height: 25,
+                  height: 30,
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
-                  child: TextFormField(
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      fillColor: Theme.of(context).accentColor,
-                      labelText: "Password",
-                      labelStyle: TextStyle(
-                        color: Theme.of(context).accentColor,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AuthScreen(),
                       ),
-                      prefixIcon: Icon(
-                        Icons.password_rounded,
-                        color: Theme.of(context).accentColor,
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Theme.of(context).accentColor),
-                      ),
-                      errorBorder: UnderlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Theme.of(context).accentColor),
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Theme.of(context).accentColor,
-                        ),
-                      ),
-                      errorStyle: TextStyle(
-                        color: Theme.of(context).accentColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                      ),
-                    ),
-                    obscureText: true,
-                    cursorColor: Theme.of(context).primaryColor,
-                    controller: _passwordController,
-                    style: TextStyle(
-                      color: Theme.of(context).accentColor,
-                    ),
-                    validator: (val) {
-                      if (val.isEmpty) return "Should not be empty";
-                      return null;
-                    },
-                    onChanged: (val) {},
-                  ),
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState.validate()) {}
+                    );
                   },
-                  style: ElevatedButton.styleFrom(
-                    primary: Theme.of(context).accentColor,
-                    padding:
-                        EdgeInsets.symmetric(vertical: 15, horizontal: 135),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                  child: RichText(
+                    text: TextSpan(
+                      text: 'Need an an Account ',
+                      children: [
+                        TextSpan(
+                          text: 'Sign up',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                   ),
-                  child: Text(
-                    "Sign in",
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Theme.of(context).primaryColor,
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Home(),
+                      ),
+                    );
+                  },
+                  child: Center(
+                    child: Container(
+                      height: 30,
+                      child: Text(
+                        "Continue without Sign in",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Theme.of(context).accentColor,
+                        ),
+                      ),
                     ),
                   ),
                 )
               ],
             ),
           ),
-          SizedBox(
-            height: 30,
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AuthScreen(),
-                ),
-              );
-            },
-            child: RichText(
-              text: TextSpan(
-                text: 'Need an an Account ',
-                children: [
-                  TextSpan(
-                    text: 'Sign up',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.3,
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Home(),
-                ),
-              );
-            },
-            child: Center(
-              child: Container(
-                height: 30,
-                child: Text(
-                  "Continue without Sign in",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Theme.of(context).accentColor,
-                  ),
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
 }
