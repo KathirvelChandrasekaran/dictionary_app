@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 ThemeData theme = ThemeData(
-  scaffoldBackgroundColor: Color(0xff151515),
+  scaffoldBackgroundColor: Color(0XFFCD0916),
   primaryColor: Color(0XFFCD0916),
   selectedRowColor: Color(0xff2A044A),
   indicatorColor: Color(0xffA2716A),
