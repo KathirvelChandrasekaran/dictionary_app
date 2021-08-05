@@ -137,7 +137,7 @@ class _LoginPageState extends AuthState<LoginPage> {
                 ),
               ),
               child: Text(
-                _isLoading ? 'Loading' : 'Send Link',
+                _isLoading ? 'Sending link' : 'Send Link',
                 style: TextStyle(
                   fontSize: 18,
                   color: Theme.of(context).primaryColor,
