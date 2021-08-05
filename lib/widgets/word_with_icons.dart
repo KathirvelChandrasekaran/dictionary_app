@@ -1,5 +1,6 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:dictionary_app/models/dictionay_model.dart';
+import 'package:dictionary_app/utils/constantes.dart';
 import 'package:dictionary_app/utils/snackBar.dart';
 import 'package:dictionary_app/utils/supabase_manager.dart';
 import 'package:dictionary_app/utils/theme.dart';
@@ -137,7 +138,7 @@ Column wordWithIcons(AsyncData<List<DictionaryModel>> res, int index,
                         final sharedPreferences =
                             await SharedPreferences.getInstance();
                         final session = sharedPreferences.getString('user');
-                        final response = await SupabaseManager()
+                        await SupabaseManager()
                             .client
                             .auth
                             .recoverSession(session);
@@ -145,7 +146,7 @@ Column wordWithIcons(AsyncData<List<DictionaryModel>> res, int index,
                             .client
                             .from('bookmarks')
                             .insert({
-                              'createdBy': response.user.email,
+                              'createdBy': supabase.auth.currentUser.email,
                               'word': res.value[index].word,
                               'meaning': res.value[index].meanings.first
                                   .definitions.first.definition,

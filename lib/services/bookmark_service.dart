@@ -4,11 +4,11 @@ import 'package:dictionary_app/utils/supabase_manager.dart';
 class BookMarkService {
   SupabaseManager manager = SupabaseManager();
 
-  Future addBookMark(String createdBy, word, meanaing, audioURL, phoenetics,
-      partsOfSpeech) async {
+  Future addBookMark(
+      String word, meanaing, audioURL, phoenetics, partsOfSpeech) async {
     await manager.client.from('bookmarks').insert(
       {
-        'createdBy': createdBy,
+        'createdBy': supabase.auth.currentUser.email,
         'word': word,
         'meanaing': meanaing,
         'audioURL': audioURL,
@@ -25,7 +25,12 @@ class BookMarkService {
         .eq('createdBy', supabase.auth.currentUser.email)
         .order('createdAt', ascending: true)
         .execute();
-    final resData = response.data as List;
-    return resData;
+    // print(response.data);
+    final readData = response.data as List;
+    return readData;
+  }
+
+  deleteBookMark(String id) async {
+    await manager.client.from('bookmarks').delete().eq('id', id).execute();
   }
 }

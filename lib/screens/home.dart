@@ -1,5 +1,4 @@
 import 'package:dictionary_app/providers/home_screen_provider.dart';
-import 'package:dictionary_app/screens/profile.dart';
 import 'package:dictionary_app/screens/saved_words.dart';
 import 'package:dictionary_app/screens/search_screen.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +12,6 @@ class Home extends StatelessWidget {
       List<Widget> _screens = [
         SearchScreen(),
         SavedWords(),
-        Profile(),
       ];
       return Scaffold(
         body: _screens[index.currentIndex],
@@ -35,10 +33,6 @@ class Home extends StatelessWidget {
             BottomNavigationBarItem(
               icon: Icon(Icons.bookmark_added_rounded),
               label: 'Saved Words',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle_rounded),
-              label: 'Profile',
             ),
           ],
         ),

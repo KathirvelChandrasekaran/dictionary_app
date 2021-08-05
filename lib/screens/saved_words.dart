@@ -1,10 +1,11 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:dictionary_app/screens/splash_screen.dart';
 import 'package:dictionary_app/services/bookmark_service.dart';
-import 'package:dictionary_app/utils/supabase_manager.dart';
-import 'package:dictionary_app/widgets/word_with_icons.dart';
+import 'package:dictionary_app/utils/constantes.dart';
+import 'package:dictionary_app/utils/snackBar.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase/supabase.dart';
+import 'package:flutter/services.dart';
+import 'package:share/share.dart';
 
 class SavedWords extends StatefulWidget {
   const SavedWords({Key key}) : super(key: key);
@@ -14,20 +15,13 @@ class SavedWords extends StatefulWidget {
 }
 
 class _SavedWordsState extends State<SavedWords> {
-  GotrueSessionResponse _response;
+  BookMarkService _bookMarkService;
+  AssetsAudioPlayer assetAudioPlayer;
   @override
   void initState() {
     super.initState();
-    getSharedPreferences();
-  }
-
-  getSharedPreferences() async {
-    final sharedPreferences = await SharedPreferences.getInstance();
-    final session = sharedPreferences.getString('user');
-    final response =
-        await SupabaseManager().client.auth.recoverSession(session);
-    _response = response;
-    print(_response.user.email);
+    _bookMarkService = BookMarkService();
+    assetAudioPlayer = AssetsAudioPlayer();
   }
 
   @override
@@ -35,15 +29,40 @@ class _SavedWordsState extends State<SavedWords> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Saved words"),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              final response = await supabase.auth.signOut();
+              if (response.error != null)
+                createSnackBar(
+                  response.error.message,
+                  context,
+                  Theme.of(context).primaryColor,
+                  Theme.of(context).accentColor,
+                );
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SplashScreen(),
+                ),
+              );
+            },
+            icon: Icon(
+              Icons.logout_rounded,
+              color: Theme.of(context).accentColor,
+            ),
+          ),
+        ],
       ),
       backgroundColor: Theme.of(context).accentColor,
       body: FutureBuilder(
-        future: BookMarkService().getUserBookmark(),
+        future: _bookMarkService.getUserBookmark(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData == null &&
-              snapshot.connectionState == ConnectionState.none)
+          if (!snapshot.hasData)
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
+              ),
             );
           return ListView.builder(
             scrollDirection: Axis.vertical,
@@ -69,9 +88,6 @@ class _SavedWordsState extends State<SavedWords> {
                       SizedBox(
                         height: 25,
                       ),
-                      SizedBox(
-                        height: 25,
-                      ),
                       Container(
                         child: Text(
                           snapshot.data[index]['word'],
@@ -88,7 +104,7 @@ class _SavedWordsState extends State<SavedWords> {
                       ),
                       Container(
                         child: Text(
-                          snapshot.data[index]['defenition'],
+                          snapshot.data[index]['meaning'],
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 18,
@@ -98,6 +114,153 @@ class _SavedWordsState extends State<SavedWords> {
                       ),
                       SizedBox(
                         height: 25,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              children: [
+                                Container(
+                                  child: IconButton(
+                                    tooltip: "Copy to Clipboard",
+                                    onPressed: () {
+                                      Clipboard.setData(
+                                        ClipboardData(
+                                            text: snapshot.data[index]['word']),
+                                      ).then(
+                                        (value) => ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                "Text is copied to Clipboard ✌🏼"),
+                                            behavior: SnackBarBehavior.floating,
+                                            backgroundColor:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    icon: Icon(
+                                      Icons.copy_rounded,
+                                      color: Theme.of(context).indicatorColor,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  "Copy",
+                                  style: TextStyle(
+                                    color: Theme.of(context).indicatorColor,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              children: [
+                                Container(
+                                  child: IconButton(
+                                    tooltip: "Play pronounciation",
+                                    onPressed: () {
+                                      assetAudioPlayer.open(
+                                        Audio.network(
+                                            snapshot.data[index]['audioURL']),
+                                      );
+                                    },
+                                    icon: Icon(
+                                      Icons.volume_up_rounded,
+                                      color: Theme.of(context).indicatorColor,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  "Hear",
+                                  style: TextStyle(
+                                    color: Theme.of(context).indicatorColor,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              children: [
+                                Container(
+                                  child: IconButton(
+                                    tooltip: "Delete from saved list",
+                                    onPressed: () async {
+                                      await BookMarkService().deleteBookMark(
+                                          snapshot.data[index]['id']);
+                                      createSnackBar(
+                                          "Deleted Successfully",
+                                          context,
+                                          Theme.of(context).accentColor,
+                                          Theme.of(context).primaryColor);
+                                    },
+                                    icon: Icon(
+                                      Icons.delete_forever_rounded,
+                                      color: Theme.of(context).indicatorColor,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  "Delete",
+                                  style: TextStyle(
+                                    color: Theme.of(context).indicatorColor,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              children: [
+                                Container(
+                                  child: IconButton(
+                                    tooltip: "Share this word",
+                                    onPressed: () {
+                                      Share.share(
+                                        'Check out the word ${snapshot.data[index]['word']} in Dictionary app!',
+                                        subject: 'Look what I made!',
+                                      );
+                                    },
+                                    icon: Icon(
+                                      Icons.share_rounded,
+                                      color: Theme.of(context).indicatorColor,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  "Share",
+                                  style: TextStyle(
+                                    color: Theme.of(context).indicatorColor,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

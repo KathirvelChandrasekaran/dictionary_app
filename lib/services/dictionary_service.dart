@@ -27,7 +27,7 @@ class DictionaryService {
 class ErrorService {
   static final baseURL = "https://api.dictionaryapi.dev/api/v2/entries/en_US/";
 
-  Future<bool> get(query) async {
+  Future get(query) async {
     http.Response response;
     final url = Uri.parse("$baseURL$query");
 
