@@ -1,12 +1,15 @@
 import 'package:dictionary_app/components/auth_state.dart';
+import 'package:dictionary_app/screens/home.dart';
 import 'package:dictionary_app/utils/constantes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:supabase/supabase.dart';
 
+// ignore: must_be_immutable
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key key}) : super(key: key);
-
+  bool flag;
+  LoginPage({this.flag});
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -74,6 +77,10 @@ class _LoginPageState extends AuthState<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            Lottie.asset(
+              'assets/email.json',
+              height: 200,
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
               child: TextFormField(
@@ -136,6 +143,33 @@ class _LoginPageState extends AuthState<LoginPage> {
                   color: Theme.of(context).primaryColor,
                 ),
               ),
+            ),
+            Container(
+              child: widget.flag
+                  ? GestureDetector(
+                      onTap: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Home(),
+                          ),
+                        );
+                      },
+                      child: Center(
+                        child: Container(
+                          height: 30,
+                          child: Text(
+                            "Continue without Sign in",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Theme.of(context).accentColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Text(""),
             )
           ],
         ),

@@ -10,7 +10,7 @@ class AuthState<T extends StatefulWidget> extends SupabaseAuthState<T> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => LoginPage(),
+        builder: (context) => LoginPage(flag: true),
       ),
     );
   }

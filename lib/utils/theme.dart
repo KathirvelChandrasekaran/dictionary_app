@@ -13,7 +13,7 @@ ThemeData theme = ThemeData(
     elevation: 0,
     iconTheme: IconThemeData(
       color: Color(
-        0xff7AB317,
+        0xffEFE6DD,
       ),
     ),
     brightness: Brightness.light,

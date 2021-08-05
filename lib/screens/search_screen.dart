@@ -1,6 +1,8 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:dictionary_app/providers/auto_fill_provider.dart';
 import 'package:dictionary_app/providers/dictionary_provider.dart';
+import 'package:dictionary_app/screens/login.dart';
+import 'package:dictionary_app/utils/constantes.dart';
 import 'package:dictionary_app/widgets/word_with_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,6 +48,24 @@ class SearchScreen extends StatelessWidget {
             ),
             backgroundColor: Theme.of(context).primaryColor,
             elevation: 0,
+            actions: [
+              supabase.auth.currentSession == null
+                  ? IconButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginPage(),
+                          ),
+                        );
+                      },
+                      icon: Icon(
+                        Icons.login_outlined,
+                        color: Theme.of(context).accentColor,
+                      ),
+                    )
+                  : null,
+            ],
           ),
           body: Container(
             margin: EdgeInsets.only(top: 10),

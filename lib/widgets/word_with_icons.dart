@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share/share.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 Column wordWithIcons(AsyncData<List<DictionaryModel>> res, int index,
     BuildContext context, AssetsAudioPlayer assetAudioPlayer) {
@@ -135,36 +134,44 @@ Column wordWithIcons(AsyncData<List<DictionaryModel>> res, int index,
                     child: IconButton(
                       tooltip: "Save to bookmark",
                       onPressed: () async {
-                        final sharedPreferences =
-                            await SharedPreferences.getInstance();
-                        final session = sharedPreferences.getString('user');
-                        await SupabaseManager()
-                            .client
-                            .auth
-                            .recoverSession(session);
-                        await SupabaseManager()
-                            .client
-                            .from('bookmarks')
-                            .insert({
-                              'createdBy': supabase.auth.currentUser.email,
-                              'word': res.value[index].word,
-                              'meaning': res.value[index].meanings.first
-                                  .definitions.first.definition,
-                              'audioURL':
-                                  res.value[index].phonetics.first.audio,
-                              'phoenetics':
-                                  res.value[index].phonetics.first.text,
-                              'partsOfSpeech':
-                                  res.value[index].meanings.first.partOfSpeech,
-                            })
-                            .execute()
-                            .then(
-                              (value) => createSnackBar(
-                                  "Saved to your bookmark",
-                                  context,
-                                  theme.accentColor,
-                                  theme.primaryColor),
-                            );
+                        // final sharedPreferences =
+                        //     await SharedPreferences.getInstance();
+                        // final session = sharedPreferences.getString('user');
+                        // await SupabaseManager()
+                        //     .client
+                        //     .auth
+                        //     .recoverSession(session);
+
+                        supabase.auth.currentSession != null
+                            ? await SupabaseManager()
+                                .client
+                                .from('bookmarks')
+                                .insert({
+                                  'createdBy': supabase.auth.currentUser.email,
+                                  'word': res.value[index].word,
+                                  'meaning': res.value[index].meanings.first
+                                      .definitions.first.definition,
+                                  'audioURL':
+                                      res.value[index].phonetics.first.audio,
+                                  'phoenetics':
+                                      res.value[index].phonetics.first.text,
+                                  'partsOfSpeech': res
+                                      .value[index].meanings.first.partOfSpeech,
+                                })
+                                .execute()
+                                .then(
+                                  (value) => createSnackBar(
+                                      "Saved to your bookmark",
+                                      context,
+                                      theme.accentColor,
+                                      theme.primaryColor),
+                                )
+                            : createSnackBar(
+                                "Login to save",
+                                context,
+                                Theme.of(context).accentColor,
+                                Theme.of(context).primaryColor,
+                              );
                       },
                       icon: Icon(
                         Icons.bookmark_added_rounded,
@@ -173,7 +180,7 @@ Column wordWithIcons(AsyncData<List<DictionaryModel>> res, int index,
                     ),
                   ),
                   Text(
-                    "Bookmark",
+                    "Save",
                     style: TextStyle(
                       color: Theme.of(context).indicatorColor,
                     ),
