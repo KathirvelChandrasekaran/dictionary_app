@@ -1,4 +1,5 @@
 import 'package:dictionary_app/models/dictionay_model.dart';
+import 'package:dictionary_app/models/error_model.dart';
 import 'package:http/http.dart' as http;
 
 class DictionaryService {
@@ -36,8 +37,10 @@ class ErrorService {
       print(response.statusCode);
 
       if (response.statusCode == 200) {
-        return true;
-      } else if (response.statusCode == 404) return false;
+        var res = errorModelFromJson(response.body);
+        return res;
+      } else
+        return null;
     } on Exception catch (e) {
       print("object");
       print(e.toString());

@@ -49,7 +49,7 @@ class SearchScreen extends StatelessWidget {
             backgroundColor: Theme.of(context).primaryColor,
             elevation: 0,
             actions: [
-              supabase.auth.currentSession == null
+              supabase.auth.currentSession != null
                   ? IconButton(
                       onPressed: () {
                         Navigator.pushReplacement(
@@ -64,7 +64,7 @@ class SearchScreen extends StatelessWidget {
                         color: Theme.of(context).accentColor,
                       ),
                     )
-                  : null,
+                  : Container(),
             ],
           ),
           body: Container(
@@ -111,7 +111,11 @@ class SearchScreen extends StatelessWidget {
                     icon: const Icon(
                       Icons.search_rounded,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      queryListener.listenFlag = true;
+                      watch(getQueryResponse(queryListener.query));
+                      watch(getErrorResponse(queryListener.query));
+                    },
                   ),
                 ),
                 FloatingSearchBarAction.searchToClear(
@@ -122,48 +126,49 @@ class SearchScreen extends StatelessWidget {
                 return ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Material(
-                      color: Colors.white,
-                      elevation: 4.0,
-                      child: Container(
-                        height: MediaQuery.of(context).size.height,
-                        child: autoResponse.map(
-                          data: (data) => ListView.builder(
-                            itemCount: autoResponse.data.value.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Text(
-                                  data.value[index].word,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                  ),
+                    color: Colors.white,
+                    elevation: 4.0,
+                    child: Container(
+                      height: MediaQuery.of(context).size.height,
+                      child: autoResponse.map(
+                        data: (data) => ListView.builder(
+                          itemCount: autoResponse.data.value.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(
+                                data.value[index].word,
+                                style: TextStyle(
+                                  color: Colors.black,
                                 ),
-                                onTap: () {
-                                  queryListener.query = data.value[index].word;
-                                  controller.close();
-                                  queryListener.listenFlag = true;
-                                },
-                              );
-                            },
-                          ),
-                          loading: (_) => SizedBox(
-                            child: Center(
-                              child: Container(
-                                height: 25,
-                                width: 25,
-                                child: CircularProgressIndicator(
-                                  color: Theme.of(context).primaryColor,
-                                ),
+                              ),
+                              onTap: () {
+                                queryListener.listenFlag = true;
+                                queryListener.query = data.value[index].word;
+                                controller.close();
+                              },
+                            );
+                          },
+                        ),
+                        loading: (_) => SizedBox(
+                          child: Center(
+                            child: Container(
+                              height: 25,
+                              width: 25,
+                              child: CircularProgressIndicator(
+                                color: Theme.of(context).primaryColor,
                               ),
                             ),
                           ),
-                          error: (_) => Text(
-                            _.error.toString(),
-                            style: TextStyle(
-                              color: Colors.red,
-                            ),
+                        ),
+                        error: (_) => Text(
+                          _.error.toString(),
+                          style: TextStyle(
+                            color: Colors.red,
                           ),
                         ),
-                      )),
+                      ),
+                    ),
+                  ),
                 );
               },
               body: Container(

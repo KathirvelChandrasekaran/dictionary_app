@@ -2,6 +2,7 @@ import 'package:dictionary_app/services/dictionary_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dictionary_app/models/dictionay_model.dart';
+import 'package:dictionary_app/models/error_model.dart';
 
 class DictionoryNotifier extends ChangeNotifier {
   String _query = "";
@@ -50,7 +51,7 @@ final getQueryResponse =
   },
 );
 
-final getErrorResponse = FutureProvider.autoDispose.family<bool, String>(
+final getErrorResponse = FutureProvider.autoDispose.family<ErrorModel, String>(
   (ref, query) {
     final res = ref.read(errorProvider);
     return res.get(query);

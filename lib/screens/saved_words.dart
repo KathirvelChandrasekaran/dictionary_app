@@ -31,28 +31,30 @@ class _SavedWordsState extends State<SavedWords> {
       appBar: AppBar(
         title: Text("Saved words"),
         actions: [
-          IconButton(
-            onPressed: () async {
-              final response = await supabase.auth.signOut();
-              if (response.error != null)
-                createSnackBar(
-                  response.error.message,
-                  context,
-                  Theme.of(context).primaryColor,
-                  Theme.of(context).accentColor,
-                );
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SplashScreen(),
-                ),
-              );
-            },
-            icon: Icon(
-              Icons.logout_rounded,
-              color: Theme.of(context).accentColor,
-            ),
-          ),
+          supabase.auth.currentSession != null
+              ? IconButton(
+                  onPressed: () async {
+                    final response = await supabase.auth.signOut();
+                    if (response.error != null)
+                      createSnackBar(
+                        response.error.message,
+                        context,
+                        Theme.of(context).primaryColor,
+                        Theme.of(context).accentColor,
+                      );
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SplashScreen(),
+                      ),
+                    );
+                  },
+                  icon: Icon(
+                    Icons.logout_rounded,
+                    color: Theme.of(context).accentColor,
+                  ),
+                )
+              : Container(),
         ],
       ),
       backgroundColor: Theme.of(context).accentColor,
