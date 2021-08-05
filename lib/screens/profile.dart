@@ -1,7 +1,8 @@
 import 'package:dictionary_app/screens/splash_screen.dart';
+import 'package:dictionary_app/utils/constantes.dart';
+import 'package:dictionary_app/utils/snackBar.dart';
 import 'package:dictionary_app/utils/supabase_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key key}) : super(key: key);
@@ -25,9 +26,14 @@ class _ProfileState extends State<Profile> {
         actions: [
           IconButton(
             onPressed: () async {
-              final sharedPreference = await SharedPreferences.getInstance();
-              sharedPreference.clear();
-              await manager.client.auth.signOut();
+              final response = await supabase.auth.signOut();
+              if (response.error != null)
+                createSnackBar(
+                  response.error.message,
+                  context,
+                  Theme.of(context).primaryColor,
+                  Theme.of(context).accentColor,
+                );
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
@@ -41,6 +47,15 @@ class _ProfileState extends State<Profile> {
             ),
           ),
         ],
+      ),
+      body: Center(
+        child: Text(
+          supabase.auth.currentUser.email,
+          style: TextStyle(
+            color: Theme.of(context).accentColor,
+            fontSize: 25,
+          ),
+        ),
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:dictionary_app/screens/wrapper.dart';
+import 'package:dictionary_app/components/auth_state.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -11,19 +11,13 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends AuthState<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(
-      Duration(seconds: 3),
-      () => Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Wrapper(),
-        ),
-      ),
-    );
+    Timer(Duration(seconds: 5), () {
+      recoverSupabaseSession();
+    });
   }
 
   @override
