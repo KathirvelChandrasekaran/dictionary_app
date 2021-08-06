@@ -1,16 +1,14 @@
-# dictionary_app
+# Dictionary Flutter Application!
 
-A new Flutter project.
+Dictionary Flutter Application is made with Flutter and Supabase which allows user to search words and fetch the meaning. End users can save use the app as guest for every single session or they can authenticate with the app and can save the words for later use. Dictionary Flutter Application has E-Mail link authentication which allows unauthorized authentication.
 
-## Getting Started
+# Usage of Supabase in this app
 
-This project is a starting point for a Flutter application.
+Supabase is integrated for the purpose of authentication and database.
 
-A few resources to get you started if this is your first Flutter project:
+# Used API's
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Dictionary Flutter Application use **Open Source API's** to meet the purpose of the app.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- [Dictionary API](https://dictionaryapi.dev/)
+- [Datamuse API](https://www.datamuse.com/api/)
