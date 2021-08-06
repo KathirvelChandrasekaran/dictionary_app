@@ -1,5 +1,6 @@
 import 'package:dictionary_app/models/dictionay_model.dart';
 import 'package:dictionary_app/models/error_model.dart';
+import 'package:dictionary_app/providers/status_provider.dart';
 import 'package:http/http.dart' as http;
 
 class DictionaryService {
@@ -7,11 +8,13 @@ class DictionaryService {
   Future<List<DictionaryModel>> get(query) async {
     http.Response response;
     final url = Uri.parse("$baseURL$query");
-
+    StatusProvider status = StatusProvider();
     try {
       response = await http.get(url);
-      print(response.statusCode);
-
+      // print(response.statusCode);
+      status.listenToStatus(response.statusCode);
+      print("From service");
+      print(status.status);
       if (response.statusCode == 200) {
         var res = dictionaryModelFromJson(response.body);
         return res;
@@ -34,7 +37,7 @@ class ErrorService {
 
     try {
       response = await http.get(url);
-      print(response.statusCode);
+      // print(response.statusCode);
 
       if (response.statusCode == 200) {
         var res = errorModelFromJson(response.body);

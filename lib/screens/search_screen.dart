@@ -1,6 +1,7 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:dictionary_app/providers/auto_fill_provider.dart';
 import 'package:dictionary_app/providers/dictionary_provider.dart';
+import 'package:dictionary_app/providers/status_provider.dart';
 import 'package:dictionary_app/screens/login.dart';
 import 'package:dictionary_app/utils/constantes.dart';
 import 'package:dictionary_app/widgets/word_with_icons.dart';
@@ -40,6 +41,8 @@ class SearchScreen extends StatelessWidget {
         var response = watch(getQueryResponse(queryListener.query));
         var autoResponse = watch(getAutoFillResponse(autoFillListener.query));
         FloatingSearchBarController controller = FloatingSearchBarController();
+        print("From consumer");
+        print(StatusProvider().status);
         return Scaffold(
           backgroundColor: Theme.of(context).primaryColor,
           appBar: AppBar(
@@ -100,6 +103,7 @@ class SearchScreen extends StatelessWidget {
                   queryListener.listenFlag = true;
                   watch(getQueryResponse(queryListener.query));
                   watch(getErrorResponse(queryListener.query));
+                  controller.close();
                   // createSnackBar(
                   //     "${response.data.value.length} results for you");
                 }
@@ -115,6 +119,7 @@ class SearchScreen extends StatelessWidget {
                       queryListener.listenFlag = true;
                       watch(getQueryResponse(queryListener.query));
                       watch(getErrorResponse(queryListener.query));
+                      controller.close();
                     },
                   ),
                 ),
