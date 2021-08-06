@@ -4,6 +4,7 @@ import 'package:dictionary_app/screens/splash_screen.dart';
 import 'package:dictionary_app/services/bookmark_service.dart';
 import 'package:dictionary_app/utils/constantes.dart';
 import 'package:dictionary_app/utils/snackBar.dart';
+import 'package:dictionary_app/utils/supabase_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share/share.dart';
@@ -18,11 +19,13 @@ class SavedWords extends StatefulWidget {
 class _SavedWordsState extends State<SavedWords> {
   BookMarkService _bookMarkService;
   AssetsAudioPlayer assetAudioPlayer;
+  SupabaseManager manager;
   @override
   void initState() {
     super.initState();
     _bookMarkService = BookMarkService();
     assetAudioPlayer = AssetsAudioPlayer();
+    manager = SupabaseManager();
   }
 
   @override
@@ -66,6 +69,17 @@ class _SavedWordsState extends State<SavedWords> {
                   return Center(
                     child: CircularProgressIndicator(
                       color: Theme.of(context).primaryColor,
+                    ),
+                  );
+                if (snapshot.data.length == 0)
+                  return Center(
+                    child: Text(
+                      "No saved words",
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   );
                 return ListView.builder(
@@ -220,6 +234,18 @@ class _SavedWordsState extends State<SavedWords> {
                                             await BookMarkService()
                                                 .deleteBookMark(
                                                     snapshot.data[index]['id']);
+
+                                            // await manager.client
+                                            //     .from(
+                                            //         'bookmarks:id.eq.${snapshot.data[index]['id']}')
+                                            //     .on(SupabaseEventTypes.all,
+                                            //         (payload) {
+                                            //   print('Something happenned: ');
+                                            // }).subscribe((String event,
+                                            //         {String errorMsg}) {
+                                            //   print(
+                                            //       'event: $event error: $errorMsg');
+                                            // });
                                             createSnackBar(
                                                 "Deleted Successfully",
                                                 context,

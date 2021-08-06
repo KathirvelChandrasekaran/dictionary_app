@@ -11,18 +11,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  assets_audio_player: ^3.0.3+6
+  connectivity: ^3.0.6
   cupertino_icons: ^1.0.2
   flutter_riverpod: ^0.14.0+3
-  material_floating_search_bar: ^0.3.4
   http: ^0.13.3
-  assets_audio_player: ^3.0.3+6
-  share: ^2.0.4
+  injector: ^2.0.0
   lottie: ^1.1.0
+  material_floating_search_bar: ^0.3.4
+  share: ^2.0.4
+  shared_preferences: ^2.0.6
   supabase: ^0.0.7
   supabase_flutter: ^0.0.7
-  shared_preferences: ^2.0.6
-  connectivity: ^3.0.6
 
 dev_dependencies:
   flutter_test:
@@ -34,7 +34,6 @@ flutter:
   assets:
     - assets/
   #   - images/a_dot_ham.jpeg
-
   # fonts:
   #   - family: Schyler
   #     fonts:
