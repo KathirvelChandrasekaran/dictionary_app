@@ -1,6 +1,7 @@
 # Dictionary Flutter Application!
 
-Dictionary Flutter Application is made with Flutter and Supabase which allows user to search words and fetch the meaning. End users can save use the app as guest for every single session or they can authenticate with the app and can save the words for later use. Dictionary Flutter Application has E-Mail link authentication which allows unauthorized authentication.
+Dictionary Flutter Application is made with Flutter and Supabase which allows user to search words and fetch the meaning. End users can save use the app as guest for every single session or they can authenticate with the app and can save the words for later use. Dictionary Flutter Application has E-Mail link authentication which allows unauthorized authentication. 
+
 
 # Usage of Supabase in this app
 
@@ -10,9 +11,9 @@ Supabase is integrated for the purpose of authentication and database.
 
 Dictionary Flutter Application use **Open Source API's** to meet the purpose of the app.
 
-- [Dictionary API](https://dictionaryapi.dev/)
-- [Datamuse API](https://www.datamuse.com/api/)
+ - [Dictionary API](https://dictionaryapi.dev/)
+ - [Datamuse API](https://www.datamuse.com/api/)
 
 # Demo
 
-![App Intro](https://github.com/KathirvelChandrasekaran/dictionary_app/blob/master/readme-assets/intro.gif)
+<img src="readme-assets/intro.gif" width="200"> <img src="readme-assets/guest.gif" width="200">  <img src="readme-assets/suggestion.gif" width="200">  <img src="readme-assets/result.gif" width="200"> <img src="readme-assets/deep_link.gif" width="200">  <img src="readme-assets/delete.gif" width="200">   
