@@ -16,4 +16,4 @@ Dictionary Flutter Application use **Open Source API's** to meet the purpose of 
 
 # Demo
 
-![App Intro](https://github.com/KathirvelChandrasekaran/dictionary_app/blob/master/readme-assets/intro.gif=100x20)
+<img src="readme-assets/intro.gif" width="200"> <img src="readme-assets/guest.gif" width="200">  <img src="readme-assets/suggestion.gif" width="200">  <img src="readme-assets/result.gif" width="200"> <img src="readme-assets/deep_link.gif" width="200">  <img src="readme-assets/delete.gif" width="200">   
