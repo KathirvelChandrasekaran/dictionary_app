@@ -12,3 +12,7 @@ Dictionary Flutter Application use **Open Source API's** to meet the purpose of 
 
 - [Dictionary API](https://dictionaryapi.dev/)
 - [Datamuse API](https://www.datamuse.com/api/)
+
+# Demo
+
+![App Intro](https://github.com/KathirvelChandrasekaran/dictionary_app/blob/master/readme-assets/intro.gif)
